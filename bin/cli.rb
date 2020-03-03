@@ -1,12 +1,9 @@
 require_relative '../config/environment'
 require "pry"
-def loginnow
-puts "enter username"
-name = gets.chomp
-end
 
-####Create A new user
 
+
+####Create a new user
     def create_user
         prompt = TTY::Prompt.new
         puts "It is time to create your journal:)"
@@ -19,21 +16,52 @@ end
         #binding.pry
         new_user = User.new(username: new_name, password: new_password )
         new_user.save
-        new_user
+        user_firstpage
     end
 
-    def user_firstpage
+####Method Deletes a user
+    def delete_user
         prompt = TTY::Prompt.new
-        selected_promt = prompt.select("Welcome to your journal", %w(Selectuser Createuser exit))
-        if selected_promt == "exit" 
-        
-        elsif selected_promt == "Selectuser"
-            puts  "User Selected"
-        elsif selected_promt == "Createuser"
-                create_user
+        choices = User.get_all_user_names
+        selected_promt = prompt.select("What user do you want to delete", "[Back]", choices)
+        if selected_promt == "[Back]"
+            user_firstpage
+        elsif
+            selected = prompt.select("What user do you want to delete", "Yes", "No")
+            if selected == "No"
+            delete_user
+            else
+            found_user = User.find_by(username: selected_promt)
+            found_user.destroy
+            puts "User has been deleted"
+            puts "-------------------------------"
+            puts "-------------------------------"
+            puts "-------------------------------"
+            user_firstpage
+            end          
         end
     end
 
+
+
+
+
+    def user_firstpage
+        prompt = TTY::Prompt.new
+        selected_promt = prompt.select("Welcome to your journal", %w(exit Select-user Create-user  Delete-user))
+        if selected_promt == "exit" 
+        
+        elsif selected_promt == "Select-user"
+            puts  "User Selected"
+        elsif selected_promt == "Create-user"
+                create_user
+        elsif selected_promt == "Delete-user"
+            delete_user
+        end
+    end
+
+
+    #delete_user
     user_firstpage
 
 
