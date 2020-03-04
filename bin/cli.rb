@@ -16,7 +16,7 @@ require "pry"
         #binding.pry
         new_user = User.new(username: new_name, password: new_password )
         new_user.save
-        user_firstpage
+        user_startapp
     end
 
 ####Method Deletes a user
@@ -25,7 +25,7 @@ require "pry"
         choices = User.get_all_user_names
         selected_promt = prompt.select("What user do you want to delete", "[Back]", choices)
         if selected_promt == "[Back]"
-            user_firstpage
+            user_startapp
         elsif
             selected = prompt.select("Are you sure you want to delete this account", "Yes", "No")
             if selected == "No"
@@ -37,7 +37,7 @@ require "pry"
             puts "-------------------------------"
             puts "-------------------------------"
             puts "-------------------------------"
-            user_firstpage
+            user_startapp
             end          
         end
     end
@@ -49,7 +49,7 @@ require "pry"
         choices = User.get_all_user_names
         selected_promt = prompt.select("What user do you want to delete", "[Back]", choices)
         if  selected_promt == "[Back]"
-            user_firstpage
+            user_startapp
         else 
             @selected_user = User.find_by(username: selected_promt)
             user_journal_page
@@ -122,7 +122,7 @@ def select_by_title
         select_by_title   
         elsif new_selected_prompt == "Delete"
         selected_entry[0].destroy
-        select_by_title 
+        select_by_title
         elsif new_selected_prompt == "Edit"
         edit_journal
         end
@@ -155,7 +155,7 @@ end
         prompt = TTY::Prompt.new
         selected_promt = prompt.select("Main Menu | User: #{@selected_user.username}", "[logout]", "All journals" , "Create new journal", "View By Title", "Exit")
         if selected_promt == "[logout]"
-            user_firstpage
+            user_startapp
         elsif selected_promt == "All journals"
             display_user_journals
         elsif selected_promt == "View By Title"
@@ -170,25 +170,43 @@ end
         end
     end
 
-    def user_firstpage
+    def user_startapp
         prompt = TTY::Prompt.new
-        selected_promt = prompt.select("Welcome to your journal", %w(exit Select-user-journal Create-user  Delete-user))
+        selected_promt = prompt.select("Welcome to your journal", %w(exit Admin Log-into-user Create-user  Delete-user ))
         if selected_promt == "exit" 
         puts "Exit APP"
-        elsif selected_promt == "Select-user-journal"
+        elsif selected_promt == "Admin"
             user_select
         elsif selected_promt == "Create-user"
             create_user
         elsif selected_promt == "Delete-user"
             delete_user
+        elsif selected_promt == "Log-into-user"
+            login_into_user
         end
     end
 
 
+    def login_into_user
+        prompt = TTY::Prompt.new
+        new_name = prompt.ask("What is your username")
+        new_password = prompt.ask("What is your password?")
+        if User.where(username: new_name, password: new_password) != []
+            #binding.pry
+         found_user = User.where(username: new_name, password: new_password)
+         @selected_user = found_user[0]
+        user_journal_page
+        else
+            puts "Wrong Username/password"
+            puts "*****************************"
+            puts "*****************************"
+            user_startapp
+        end
 
+    end
 
     #delete_user
-    user_firstpage
+    user_startapp
 
 
 
