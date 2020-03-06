@@ -61,6 +61,8 @@ $ ruby ./bin/run.rb
               - Delete entry - ENTER KEY
 - Exit(exits application) - ENTER KEY 
 
+![alt tag](https://dl.airtable.com/.attachmentThumbnails/ae3ffe6b7232087bada5009826e0f355/c4e7c978)
+
 
 
 
