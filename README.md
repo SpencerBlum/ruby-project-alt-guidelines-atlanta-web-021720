@@ -34,7 +34,7 @@ $ bundle install
 $ ruby ./bin/run.rb
 ```
  
-# USER 
+### User 
           SELECT SCREEN 1
           ---------------
 ##### 1. Create-user ENTER KEY
@@ -60,6 +60,7 @@ $ ruby ./bin/run.rb
               - Edit 
               - Delete entry - ENTER KEY
 - Exit(exits application) - ENTER KEY 
+
 
 
 
