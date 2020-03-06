@@ -9,4 +9,5 @@ gem "require_all"
 gem "faker"
 gem 'accuweather'
 gem 'tty-prompt'
+gem 'tty-box'
 
