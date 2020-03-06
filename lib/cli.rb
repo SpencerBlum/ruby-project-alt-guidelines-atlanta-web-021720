@@ -7,16 +7,21 @@ class Cli
     def create_user
         system "clear"
         prompt = TTY::Prompt.new
-        puts "It is time to create your journal:)"
+        puts "Add a username and password to create an account:)"
         puts "-------------------------------"
         puts "-------------------------------"
         puts "-------------------------------"
-        new_name = prompt.ask("Enter a name")
-        # new_password = prompt.mask("What is your secret?")
-        new_password = prompt.ask("What is your password?")
+        new_name = prompt.ask("Enter a username:")
+        if User.find_by(username: new_name) != nil
+            puts "Sorry user name already taken try again"
+            puts "---------------------------------------"
+            user_startapp
+        else
+        new_password = prompt.mask("Enter a password:")
         new_user = User.new(username: new_name, password: new_password )
         new_user.save
         user_startapp
+        end
     end
 
 ####Method Deletes a user
@@ -49,7 +54,7 @@ class Cli
         system "clear"
         prompt = TTY::Prompt.new
         choices = User.get_all_user_names
-        selected_promt = prompt.select("What user do you want to delete", "[Back]", "Delete-user", choices)
+        selected_promt = prompt.select("Select a user profile:", "[Back]", "Delete-user", choices)
         if  selected_promt == "[Back]"
             user_startapp
         elsif selected_promt == "Delete-user"
@@ -121,10 +126,14 @@ def select_by_title
     user_journal_page
     else
     selected_entry = JournalEntry.where(title: @selected_title)
-    puts selected_entry[0].title
-    puts "---------------------------"
-    puts "---------------------------"
-    puts selected_entry[0].notes
+    found_location = Location.find_by(id: selected_entry[0].location_id)
+    puts "Title: " + selected_entry[0].title
+    #binding.pry
+    puts "Time: #{selected_entry[0].date} "
+    puts "Date: " + selected_entry[0].title + " Location: " + found_location.place
+    puts ""
+    puts ""
+    puts "Notes: " + selected_entry[0].notes
     new_selected_prompt = prompt.select("Do you want to delete or edit entry", "[Back]", "Edit", "Delete") 
         if new_selected_prompt == "[Back]"
         select_by_title   
@@ -184,12 +193,12 @@ end
         box = TTY::Box.success("Welcome to Journey")
         print box
         prompt = TTY::Prompt.new
-        selected_promt = prompt.select("Home Screen", %w(exit Admin Log-into-user Create-user))
+        selected_promt = prompt.select("Home Screen", %w(exit Admin Log-into-user Create-account))
         if selected_promt == "exit" 
         puts "Exit APP"
         elsif selected_promt == "Admin"
             user_select
-        elsif selected_promt == "Create-user"
+        elsif selected_promt == "Create-account"
             create_user
         elsif selected_promt == "Log-into-user"
             login_into_user
@@ -201,7 +210,7 @@ end
         
         prompt = TTY::Prompt.new
         new_name = prompt.ask("What is your username")
-        new_password = prompt.ask("What is your password?")
+        new_password = prompt.mask("What is your password?")
         if User.where(username: new_name, password: new_password) != []
         found_user = User.where(username: new_name, password: new_password)
         @selected_user = found_user[0]
